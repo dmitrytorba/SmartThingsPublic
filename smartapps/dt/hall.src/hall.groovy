@@ -115,7 +115,7 @@ def getTemp() {
   if (!between) {
     return 2700
   } else {
-    return 6500
+    return 6494 
   }
 }
 
@@ -148,7 +148,9 @@ def setColors() {
     def currentTemp = bulbTemp.currentValue("colorTemperature")
     log.debug "Current temp: $currentTemp"
     def temp = getTemp()
-    bulbTemp.setColorTemperature(temp)
+    if (currentTemp[0] != temp) {
+      bulbTemp.setColorTemperature(temp)
+    }
   }
 }
 
@@ -165,7 +167,7 @@ def onMotion(evt) {
        
       def level = getLevel()
       if (sleepTime) {
-	bathroomBulbs.setLevel(5)
+	bathroomBulbs.setLevel(10)
       } else {
 	setColors()
 	bulbs.setLevel(level)

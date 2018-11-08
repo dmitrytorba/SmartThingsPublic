@@ -49,6 +49,7 @@ def onSleepButton(evt) {
       sleepSwitch.toggle()
       break
     case "double":
+      killSwitch.toggle()
       break
     case "held":
       break
@@ -66,6 +67,7 @@ def onSleep(evt) {
 def onKill(evt) {
   if (evt.value == "on") {
     bulbs.on()
+    bulbs.setLevel(100)
   } else if (evt.value == "off") {
     bulbs.off()
   }
