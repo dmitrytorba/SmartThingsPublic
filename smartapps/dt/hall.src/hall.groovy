@@ -35,8 +35,11 @@ preferences {
     input "alarmFrom", "time", title: "From", required: true
     input "alarmTo", "time", title: "To", required: true
   }
-  section("Hall and Bath Bulbs"){
+  section("Motion Controlled Bulbs"){
     input "bulbs", "capability.switchLevel", multiple: true
+  }
+  section("Turn off when sleeping"){
+    input "annoyingBulbs", "capability.switchLevel", multiple: true
   }
   section("Bulb Temperature"){
     input "bulbTemp", "capability.colorTemperature", multiple: true
@@ -63,6 +66,25 @@ def init() {
   subscribe(eastHall, "motion", onMotion)
   subscribe(westHall, "motion", onMotion)
   subscribe(bathroomMotion, "motion", onMotion)
+  subscribe(sleepSwitch, "switch", onSleep)
+  subscribe(killSwitch, "switch", onKill)
+}
+
+def onKill(evt) {
+  if (evt.value == "on") {
+    bulbs.on()
+    bulbTemp.setColorTemperature(6500)
+  } else if (evt.value == "off") {
+    bulbs.off()
+  }
+}
+
+def onSleep(evt) {
+  if (evt.value == "on") {
+    annoyingBulbs.off()
+  } else if (evt.value == "off") {
+    annoyingBulbs.on()
+  }
 }
 
 def installed() {
@@ -123,8 +145,8 @@ def setColors() {
     hallBulbColor.setHue(97)
     hallBulbColor.setSaturation(99)
   } else if(!sleepTime) {
-    //def currentTemp = bulbTemp.currentValue("colorTemperature")
-    //log.debug "Current temp: $currentTemp"
+    def currentTemp = bulbTemp.currentValue("colorTemperature")
+    log.debug "Current temp: $currentTemp"
     def temp = getTemp()
     bulbTemp.setColorTemperature(temp)
   }
