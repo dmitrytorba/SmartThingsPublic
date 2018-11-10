@@ -1,7 +1,7 @@
 definition(
 name: "hall",
 namespace: "dt",
-author: "Dmitry",
+author: "dt",
 description: "smart habitat",
 category: "Convenience",
 iconUrl: "https://s3.amazonaws.com/smartapp-icons/Meta/temp_thermo-switch.png",
@@ -102,7 +102,7 @@ def updated() {
 def getLevel() {
   def between = timeOfDayIsBetween(fromTime, toTime, new Date(), location.timeZone)
   if (!between) {
-    return 5 
+    return 10 
   } else {
     return 100
   }
@@ -159,18 +159,15 @@ def onMotion(evt) {
   def automationOn = killSwitch.currentValue("switch") != "on"
   if (automationOn) {
     log.debug "onMotion() event: $evt.value"
-    if (evt.value == "closed" ||
-	evt.value == "active" ||
+    if (evt.value == "closed" || 
+        evt.value == "active" ||
         evt.value == "open" ) {
-     		 
-      bathroomSwitch.on()
-       
       def level = getLevel()
       if (sleepTime) {
-	bathroomBulbs.setLevel(10)
+        bathroomBulbs.setLevel(10)
       } else {
-	setColors()
-	bulbs.setLevel(level)
+        setColors()
+        bulbs.setLevel(level)
       }
     }
     check()
@@ -190,8 +187,8 @@ def check() {
       def hallThreshold = 1000 * hallDelay * 60 - 1000
       def bathThreshold = 1000 * bathDelay * 60 - 1000
       if (elapsedEast >= hallThreshold && elapsedWest >= hallThreshold && elapsedBath >= bathThreshold) {
-	bulbs.off()
-	return
+        bulbs.off()
+        return
       }
     } 
   } 
