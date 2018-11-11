@@ -1,6 +1,6 @@
 metadata {
 	definition (
-    name: "Insteon switch", 
+    name: "Insteon switch bathroom", 
     namespace: "dt", 
     author: "dt") {
 		  capability "Actuator"
