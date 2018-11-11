@@ -3,9 +3,7 @@ metadata {
 	name: "Virtual Switch",
 	namespace: "dt",
 	author: "dt") {
-	  capability "Actuator"
 	  capability "Switch"
-	  capability "Sensor"
 	}
 
 	// simulator metadata
