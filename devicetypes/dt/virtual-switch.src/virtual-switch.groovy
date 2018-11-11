@@ -25,6 +25,7 @@ metadata {
 }
 
 def parse(String description) {
+  log.trace "parse(): " + description
 }
 
 def on() {
