@@ -108,6 +108,7 @@ def getTemp() {
 def onMotion(evt) {
   def automationOn = killSwitch.currentValue("switch") != "on"
   def sleepMode = sleepSwitch.currentValue("switch") == "on"
+  log.trace "playroom onMotion()"
   if (automationOn && !sleepMode) {
     if (evt.value == "active") { 
       log.debug("playroom motion, light on")
