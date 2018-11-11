@@ -1,15 +1,12 @@
-/**
- *  Backyard Insteon Dimmer
- *
- *  Copyright 2018 Dmitry Torba
- *
- */
 metadata {
-	definition (name: "Backyard Insteon Dimmer", namespace: "dmitrytorba", author: "Dmitry Torba") {
-		capability "Actuator"
-		capability "Sensor"
-		capability "Switch"
-		capability "Switch Level"
+	definition (
+    name: "Backyard Insteon Dimmer", 
+    namespace: "dt", 
+    author: "dt") {
+		  capability "Actuator"
+		  capability "Sensor"
+		  capability "Switch"
+		  capability "Switch Level"
 	}
 
 

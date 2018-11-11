@@ -1,8 +1,11 @@
 metadata {
-	definition (name: "Insteon switch bathroom", namespace: "smartthings", author: "SmartThings") {
-		capability "Actuator"
-		capability "Switch"
-		capability "Sensor"
+	definition (
+    name: "Insteon switch", 
+    namespace: "dt", 
+    author: "dt") {
+		  capability "Actuator"
+		  capability "Switch"
+		  capability "Sensor"
 	}
 
 	// simulator metadata

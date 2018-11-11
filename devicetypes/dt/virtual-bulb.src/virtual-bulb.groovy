@@ -1,10 +1,13 @@
 metadata {
-	definition (name: "Virtual Bulb", namespace: "smartthings", author: "SmartThings") {
-	  capability "Actuator"
-	  capability "Switch"
-	  capability "Sensor"
-	  capability "Switch Level"
-	  capability "Color Temperature"
+	definition (
+    name: "Virtual Bulb", 
+    namespace: "dt", 
+    author: "dt") {
+	   capability "Actuator"
+	   capability "Switch"
+	   capability "Sensor"
+	   capability "Switch Level"
+	   capability "Color Temperature"
 	}
 
 	// simulator metadata
