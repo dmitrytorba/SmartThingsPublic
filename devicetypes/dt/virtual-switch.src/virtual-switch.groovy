@@ -38,6 +38,7 @@ def off() {
 }
 
 def toggle() {
+  log.trace "virtual toggle"
   def isOn = device.currentValue("switch") == "on"
   if (isOn) {
     off()
