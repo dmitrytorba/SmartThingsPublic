@@ -13,17 +13,17 @@ metadata {
 	command "toggle"
 	// UI tile definitions
 	tiles {
-	  standardTile("button", "device.switch", width: 2, height: 2, canChangeIcon: true) {
-	    state "off", label: 'Off', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff", nextState: "on"
-	    state "on", label: 'On', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#00A0DC", nextState: "off"
+	  standardTile("switch", "device.switch", width: 2, height: 2, canChangeIcon: true) {
+	    state "off", label: '${currentValue}', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff"
+	    state "on", label: '${currentValue}', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#00A0DC"
 	  }
-	  main "button"
-	  details "button"
+	  main "switch"
+	  details "switch"
 	}
 }
 
 def parse(String description) {
-  log.trace "parse(): " + description
+  log.trace "virtual switch parse(): " + description
 }
 
 def on() {
