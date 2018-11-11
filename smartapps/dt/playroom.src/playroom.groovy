@@ -44,8 +44,10 @@ def init() {
 }
 
 def onSleepButton(evt) {
+  log.trace "onSleepButton"
   switch(evt.value) {
     case "pushed":
+      log.trace "button pushed"
       sleepSwitch.toggle()
       break
     case "double":
