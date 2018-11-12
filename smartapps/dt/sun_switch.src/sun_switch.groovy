@@ -12,18 +12,18 @@ preferences {
 	section("Sun"){
     	input "sun", "capability.switch"
   	}
-}
 
-def init() {
-  subscribe(location, "sunriseTime", sunriseTimeHandler)
-  subscribe(location, "sunsetTime", sunsetTimeHandler)
-  // TODO init sun switch 
-}
+	def init() {
+	  subscribe(location, "sunriseTime", sunriseTimeHandler)
+	  subscribe(location, "sunsetTime", sunsetTimeHandler)
+	  // TODO init sun switch 
+	}
 
-def sunsetTimeHandler(evt) {
-  sun.off()
-}
+	def sunsetTimeHandler(evt) {
+	  sun.off()
+	}
 
-def sunriseTimeHandler(evt) {
-  sun.on()
+	def sunriseTimeHandler(evt) {
+	  sun.on()
+	}
 }
