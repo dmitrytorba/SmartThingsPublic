@@ -36,18 +36,15 @@ def init() {
   subscribe(kitchenMotion, "motion", onMotion)
   subscribe(killSwitch, "switch", onKill)
   subscribe(sleepSwitch, "switch", onSleep)
-  subscribe(location, "sunriseTime", sunriseTimeHandler)
-  subscribe(location, "sunsetTime", sunsetTimeHandler)
+  subscribe(sun, "switch", onSun)
 }
 
-def sunsetTimeHandler(evt) {
-  bulb.setLevel(getLevel())
-  sun.off()
-}
-
-def sunriseTimeHandler(evt) {
-  bulb.off()
-  sun.on()
+def onSun(evt) {
+  if (evt.value == "on") {
+    bulb.off() 
+  } else if (evt.value == "off") {
+    bulb.setLevel(getLevel())
+  }
 }
 
 def onSleep(evt) {
@@ -77,7 +74,7 @@ def updated() {
 def getLevel() {
   def isSleeping = sleepSwitch.currentValue("switch") == "on"
   if (isSleeping) {
-    return 5
+    return 10 
   } else {
     return 100
   }
@@ -106,9 +103,9 @@ def check() {
       def elapsed = now() - motion.rawDateCreated.time
       def threshold = 1000 * delay * 60 - 1000
       if (elapsed >= Threshold) {
-	log.debug("kitchen bulb off")
-	bulb.setLevel(0)
-	return
+	     log.debug("kitchen bulb off")
+	     bulb.setLevel(0)
+	     return
       }
     } 
     runIn(60, check)
