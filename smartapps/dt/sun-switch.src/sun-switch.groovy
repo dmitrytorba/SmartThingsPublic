@@ -1,19 +1,28 @@
 definition(
-	name: "sun switch",
-	namespace: "dt",
-	author: "dt",
-	description: "smart habitat",
-	category: "Convenience",
-	iconUrl: "https://s3.amazonaws.com/smartapp-icons/Meta/temp_thermo-switch.png",
-	iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Meta/temp_thermo-switch@2x.png"
+  name: "sun switch",
+  namespace: "dt",
+  author: "dt",
+  description: "smart habitat",
+  category: "Convenience",
+  iconUrl: "https://s3.amazonaws.com/smartapp-icons/Meta/temp_thermo-switch.png",
+  iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Meta/temp_thermo-switch@2x.png"
 )
 
 preferences {
-	section("Sun"){
-    	input "sun", "capability.switch"
-  	}
-
+  section("Sun"){
+      input "sun", "capability.switch"
+  }
 }
+
+def installed() {
+  init()
+}
+
+def updated() {
+  unsubscribe()
+  init()
+}
+
 def init() {
   subscribe(location, "sunriseTime", sunriseTimeHandler)
   subscribe(location, "sunsetTime", sunsetTimeHandler)
