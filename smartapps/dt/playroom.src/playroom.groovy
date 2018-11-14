@@ -127,7 +127,7 @@ def check() {
   if (motion.value == "inactive") {
     def elapsed = now() - motion.rawDateCreated.time
     def threshold = 1000 * delay * 60 - 1000
-    if (elapsed >= Threshold) {
+    if (elapsed >= threshold) {
       log.trace "playroom elapsed: " + elapsed
       bulbs.off()
       return
