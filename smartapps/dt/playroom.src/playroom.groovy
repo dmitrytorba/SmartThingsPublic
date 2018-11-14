@@ -123,6 +123,7 @@ def onMotion(evt) {
 }
 
 def check() {
+  log.trace "playroom check()"
   def motion = playroomMotion.currentState("motion")
   if (motion.value == "inactive") {
     def elapsed = now() - motion.rawDateCreated.time
