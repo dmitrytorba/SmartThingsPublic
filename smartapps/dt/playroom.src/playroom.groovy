@@ -15,10 +15,6 @@ preferences {
   section("Turn off delay"){
     input "delay", "number", title: "Minutes?"
   }
-  section("Bright lights between what times?") {
-    input "fromTime", "time", title: "From", required: true
-    input "toTime", "time", title: "To", required: true
-  }
   section("Bulbs"){
     input "bulbs", "capability.switchLevel", multiple: true
   }
@@ -33,6 +29,9 @@ preferences {
   }
   section("Sleep Button"){
     input "sleepButton", "capability.button"
+  }
+  section("Control Bulb"){
+    input "controlBulb", "capability.colorTemperature"
   }
 }
 
@@ -88,21 +87,11 @@ def updated() {
 }
 
 def getLevel() {
-  def between = timeOfDayIsBetween(fromTime, toTime, new Date(), location.timeZone)
-  if (!between) {
-    return 20
-  } else {
-    return 100
-  }
+  return controlBulb.currentValue("level")
 }
 
 def getTemp() {
-  def between = timeOfDayIsBetween(fromTime, toTime, new Date(), location.timeZone)
-  if (!between) {
-    return 2700
-  } else {
-    return 6500
-  }
+  return controlBulb.currentValue("colorTemperature")
 }
 
 def onMotion(evt) {
