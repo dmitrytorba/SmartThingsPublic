@@ -1,9 +1,3 @@
-/**
- *  color
- *
- *  Copyright 2018 dt
- *
- */
 definition(
     name: "color",
     namespace: "dt",
@@ -16,9 +10,13 @@ definition(
 
 
 preferences {
-	section("Title") {
-		// TODO: put inputs here
-	}
+	section("Bright lights between what times?") {
+    	input "fromTime", "time", title: "From", required: true
+    	input "toTime", "time", title: "To", required: true
+  	}
+	section("Temperature Bulbs"){
+    	input "tBulbs", "capability.colorTemperature", multiple: true
+  	}
 }
 
 def installed() {
@@ -35,7 +33,29 @@ def updated() {
 }
 
 def initialize() {
-	// TODO: subscribe to attributes, devices, locations, etc.
+  	runEvery1Minute(main)
 }
 
-// TODO: implement event handlers
+def main() {
+	tBulbs.setLevel(getLevel())
+	tBulbs.setColorTemperature(getTemp())
+}
+
+def getLevel() {
+  def between = timeOfDayIsBetween(fromTime, toTime, new Date(), location.timeZone)
+  if (!between) {
+    return 20
+  } else {
+    return 100
+  }
+}
+
+def getTemp() {
+  def between = timeOfDayIsBetween(fromTime, toTime, new Date(), location.timeZone)
+  if (!between) {
+    return 2700
+  } else {
+    return 6500
+  }
+}
+
