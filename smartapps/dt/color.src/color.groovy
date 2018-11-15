@@ -39,13 +39,14 @@ def initialize() {
 }
 
 def hourUpdate() {
-	log.debug "color hourUpdate()"
+	log.debug "color hourUpdate()" + state.temp
 	if (state.temp > 2700) {
   		state.temp -= 350 	
   	}
 }
 
 def minuteUpdate() {
+	log.debug "color minuteUpdate()" + state.temp
 	tBulbs.setLevel(getLevel())
 	tBulbs.setColorTemperature(getTemp())
 }
