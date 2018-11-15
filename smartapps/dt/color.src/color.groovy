@@ -39,9 +39,10 @@ def initialize() {
 }
 
 def hourUpdate() {
-	log.debug "color hourUpdate()" + state.temp
+	log.debug "color hourUpdate() " + state.temp
 	if (state.temp > 2700) {
-  		state.temp -= 350 	
+  		state.temp = state.temp - 350 	
+		log.debug "updated: " + state.temp
   	}
 }
 
