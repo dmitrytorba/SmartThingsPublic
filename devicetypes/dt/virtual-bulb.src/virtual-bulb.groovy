@@ -32,14 +32,15 @@ metadata {
 	    state "level", action:"switch level.setLevel"
 	  }
 	  controlTile("colorSliderControl",
-		      "device.colorTemperature",
-		      "slider",
-	              height: 1,
-	              width: 2,
-	              inactiveLabel: false,
-	              range: "(2700..6500)") {
-	    state "colorTemperature", action:"color temperature.setColorTemperature"
-	  }
+      "device.colorTemperature",
+      "slider",
+      height: 1,
+      width: 2,
+      inactiveLabel: false,
+      range: "(2700..6500)") {
+        state "colorTemperature", 
+        action:"colorTemperature.setColorTemperature"
+    }
 	  valueTile("kelvin", "device.colorTemperature") {
 	    state "colorTemperature", label:'${currentValue}k',
 	  backgroundColors:[
