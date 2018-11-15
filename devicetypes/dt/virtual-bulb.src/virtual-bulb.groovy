@@ -28,8 +28,14 @@ metadata {
 	    state "off", label: 'Off', action: "switch.on", icon: "st.switches.switch.off", backgroundColor: "#ffffff", nextState: "on"
 	    state "on", label: 'On', action: "switch.off", icon: "st.switches.switch.on", backgroundColor: "#00A0DC", nextState: "off"
 	  }
-	  controlTile("levelSliderControl", "device.level", "slider", height: 1, width: 2, inactiveLabel: false) {
-	    state "level", action:"switch level.setLevel"
+	  controlTile("levelSliderControl", 
+      "device.level", 
+      "slider", 
+      height: 1, 
+      width: 2, 
+      inactiveLabel: false) {
+	     state "level", 
+       action:"switchLevel.setLevel"
 	  }
 	  controlTile("colorSliderControl",
       "device.colorTemperature",
