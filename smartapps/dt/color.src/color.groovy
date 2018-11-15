@@ -33,11 +33,13 @@ def updated() {
 }
 
 def initialize() {
+	state.temp = 6500
   	runEvery1Minute(minuteUpdate)
   	runEvery1Hour(hourUpdate)
 }
 
 def hourUpdate() {
+	log.debug "color hourUpdate()"
 	if (state.temp > 2700) {
   		state.temp -= 350 	
   	}
