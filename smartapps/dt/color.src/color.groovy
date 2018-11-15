@@ -46,7 +46,7 @@ def hourUpdate() {
 }
 
 def minuteUpdate() {
-	log.debug "color minuteUpdate()" + state.temp
+	hourUpdate()
 	tBulbs.setLevel(getLevel())
 	tBulbs.setColorTemperature(getTemp())
 }
