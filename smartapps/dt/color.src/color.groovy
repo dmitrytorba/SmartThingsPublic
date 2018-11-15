@@ -33,10 +33,17 @@ def updated() {
 }
 
 def initialize() {
-  	runEvery1Minute(main)
+  	runEvery1Minute(minuteUpdate)
+  	runEvery1Hour(hourUpdate)
 }
 
-def main() {
+def hourUpdate() {
+	if (state.temp > 2700) {
+  		state.temp -= 350 	
+  	}
+}
+
+def minuteUpdate() {
 	tBulbs.setLevel(getLevel())
 	tBulbs.setColorTemperature(getTemp())
 }
@@ -53,9 +60,10 @@ def getLevel() {
 def getTemp() {
   def between = timeOfDayIsBetween(fromTime, toTime, new Date(), location.timeZone)
   if (!between) {
+  	state.temp = 6500
     return 2700
   } else {
-    return 6500
+    return state.temp
   }
 }
 
