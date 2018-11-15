@@ -47,7 +47,6 @@ def hourUpdate() {
 }
 
 def minuteUpdate() {
-	hourUpdate()
 	tBulbs.setLevel(getLevel())
 	tBulbs.setColorTemperature(getTemp())
 }
