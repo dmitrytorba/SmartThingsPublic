@@ -27,6 +27,9 @@ preferences {
   }
   section("Sleep Switch"){
     input "sleepSwitch", "capability.switch"
+  }
+  section("Control Bulb"){
+    input "controlBulb", "capability.colorTemperature"
   }                                                                                                                                                                                                                                                                                                                                                               
 }
 
