@@ -59,6 +59,9 @@ preferences {
   section("Sleep Switch"){
     input "sleepSwitch", "capability.switch"
   }
+  section("Control Bulb"){
+    input "controlBulb", "capability.colorTemperature"
+  }
 }
 
 def init() {
@@ -100,23 +103,11 @@ def updated() {
 }
 
 def getLevel() {
-  def between = timeOfDayIsBetween(fromTime, toTime, new Date(), location.timeZone)
-  if (!between) {
-    return 10 
-  } else {
-    return 100
-  }
+  return controlBulb.currentValue("level")
 }
 
 def getTemp() {
-  def between = timeOfDayIsBetween(fromTime, toTime, new Date(), location.timeZone)
-  def hoursBetween = toTime - fromTime
-  //log.debug("between: $hoursBetween")    
-  if (!between) {
-    return 2700
-  } else {
-    return 6494 
-  }
+  return controlBulb.currentValue("colorTemperature")
 }
 
 def isAlarm(evt) {

@@ -11,7 +11,7 @@ definition(
 
 preferences {
   section("Motion Sensor"){
-    input "motion", "capability.motionSensor"
+    input "motion", "capability.motionSensor", required: false
   }
   section("Turn off delay"){
     input "delay", "number", title: "Minutes?"
@@ -27,13 +27,7 @@ preferences {
   }
   section("Sleep Switch"){
     input "sleepSwitch", "capability.switch"
-  }
-  section("Sleep Button"){
-    input "sleepButton", "capability.button"
-  }
-  section("Control Bulb"){
-    input "controlBulb", "capability.colorTemperature"
-  }
+  }                                                                                                                                                                                                                                                                                                                                                               
 }
 
 def installed() {
@@ -51,7 +45,14 @@ def init() {
   subscribe(motion, "motion", onMotion)
   subscribe(killSwitch, "switch", onKill)
   subscribe(sleepSwitch, "switch", onSleep)
+
+  runEvery1Minute(minuteUpdate)
 }
+
+def minuteUpdate() {
+  bulbs.setLevel(getLevel())
+  tBulbs.setColorTemperature(getTemp())
+}   
 
 def onSleep(evt) {
   if (evt.value == "on") {
