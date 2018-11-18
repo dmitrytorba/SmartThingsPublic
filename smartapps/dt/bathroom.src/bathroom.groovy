@@ -10,26 +10,93 @@ definition(
 
 
 preferences {
-	section("Title") {
-		// TODO: put inputs here
-	}
+  section("Motion Sensor"){
+    input "motion", "capability.motionSensor", required: false
+  }
+  section("Turn off delay"){
+    input "delay", "number", title: "Minutes?"
+  }
+  section("Dimmable Bulbs"){
+    input "bulbs", "capability.switchLevel", multiple: true
+  }
+  section("Temperature Bulbs"){
+    input "tBulbs", "capability.colorTemperature", multiple: true
+  }
+  section("Kill Switch"){
+    input "killSwitch", "capability.switch"
+  }
+  section("Sleep Switch"){
+    input "sleepSwitch", "capability.switch"
+  }
+  section("Control Bulb"){
+    input "controlBulb", "capability.colorTemperature"
+  }                                                                                                                                                                                                                                                                                                                                                               
 }
 
 def installed() {
 	log.debug "Installed with settings: ${settings}"
-
-	initialize()
+	init()
 }
 
 def updated() {
 	log.debug "Updated with settings: ${settings}"
-
 	unsubscribe()
-	initialize()
+	init()
 }
 
-def initialize() {
-	// TODO: subscribe to attributes, devices, locations, etc.
+def init() {
+  subscribe(motion, "motion", onMotion)
+  subscribe(killSwitch, "switch", onKill)
+  subscribe(sleepSwitch, "switch", onSleep)
 }
 
-// TODO: implement event handlers
+def onSleep(evt) {
+}
+
+def onKill(evt) {
+  if (evt.value == "on") {
+    bulbs.on()
+    bulbs.setLevel(100)
+  } else if (evt.value == "off") {
+    bulbs.off()
+  }
+}
+
+def getLevel() {
+  return controlBulb.currentValue("level")
+}
+
+def getTemp() {
+  return controlBulb.currentValue("colorTemperature")
+}
+
+def onMotion(evt) {
+  def automationOn = killSwitch.currentValue("switch") != "on"
+  log.trace "room onMotion() ${evt.value} ${automationOn}" 
+  if (automationOn) {
+    if (evt.value == "active") { 
+      log.debug("motion, light on")
+      def level = getLevel()
+      bulbs.setLevel(level)
+      def temp = getTemp()
+      tBulbs.setColorTemperature(temp)
+    } else if (evt.value == "inactive") {
+      check()
+    }
+  }
+}
+
+def check() {
+  log.trace "room check()"
+  def motionData = motion.currentState("motion")
+  if (motion.value == "inactive") {
+    def elapsed = now() - motionData.rawDateCreated.time
+    def threshold = 1000 * delay * 60 - 1000
+    if (elapsed >= threshold) {
+      log.trace "room elapsed: " + elapsed
+      bulbs.off()
+      return
+    }
+  }
+  runIn(60, check)
+}
