@@ -34,8 +34,7 @@ def updated() {
 
 def initialize() {
 	state.temp = 6500
-  	runEvery1Minute(minuteUpdate)
-  	runEvery1Hour(hourUpdate)
+  	runEvery1Minute(hourUpdate)
 }
 
 def hourUpdate() {
@@ -48,18 +47,9 @@ def hourUpdate() {
 	if (state.temp > 2700) {
   		state.temp = state.temp - 350 	
 		log.debug "updated: " + state.temp
-  	}
-}
-
-def minuteUpdate() {
-	def current = tBulbs.currentValue("colorTemperature")
-	if (current == state.temp) {
-		tBulbs.setLevel(getLevel())
 		tBulbs.setColorTemperature(getTemp())
-	} else {
-		log.debug "manual color override: " + current
-		state.temp = current
-	}
+  	} 
+	tBulbs.setLevel(getLevel())
 }
 
 def getLevel() {
