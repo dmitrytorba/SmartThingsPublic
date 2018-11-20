@@ -41,6 +41,8 @@ def initialize() {
 def hourUpdate() {
 	log.debug "color hourUpdate() " + state.temp
 	def current = currentValue("colorTemperature")
+	log.debug "current color: " + current
+	log.debug "current state: " state.temp
 	if (current != state.temp) {
 		log.debug "manual color override: " + current
 		state.temp = current
