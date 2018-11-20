@@ -147,9 +147,9 @@ def setLevel(val) {
 def setColorTemperature(value) {
   log.trace "setColorTemperature($value)"
 
-  def degrees = Math.max(2700, value)
+  def degrees = Math.max(2700, value.intValue())
   if(value > 2700){
-    degrees = Math.min(6500, value)
+    degrees = Math.min(6500, value.intValue())
   }
   def bTemp = getBulbTemp(value)
   
