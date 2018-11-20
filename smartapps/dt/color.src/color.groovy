@@ -52,7 +52,7 @@ def hourUpdate() {
 }
 
 def minuteUpdate() {
-	def current = tBulbs.currentValue("colorTemperature")[0]
+	def current = tBulbs.currentValue("colorTemperature")
 	if (current == state.temp) {
 		tBulbs.setLevel(getLevel())
 		tBulbs.setColorTemperature(getTemp())
