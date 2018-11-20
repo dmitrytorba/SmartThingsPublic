@@ -15,7 +15,7 @@ preferences {
     	input "toTime", "time", title: "To", required: true
   	}
 	section("Temperature Bulbs"){
-    	input "tBulbs", "capability.colorTemperature", multiple: true
+    	input "tBulbs", "capability.colorTemperature", multiple: false
   	}
 }
 
