@@ -39,7 +39,7 @@ def initialize() {
 }
 
 def hourUpdate() {
-	def current = tBulbs.currentValue("colorTemperature")[0]
+	def current = tBulbs.currentValue("colorTemperature")
 	log.debug "color hourUpdate() " + state.temp + " " + current
 	if (current != state.temp) {
 		log.debug "manual color override: " + current
