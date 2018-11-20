@@ -51,7 +51,7 @@ def init() {
   subscribe(controlBulb, "colorTemperature", onColor)
 }
 
-def onColor() {
+def onColor(evt) {
   bulbs.setLevel(getLevel())
   tBulbs.setColorTemperature(getTemp())
 }   
