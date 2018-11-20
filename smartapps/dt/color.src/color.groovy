@@ -34,7 +34,7 @@ def updated() {
 
 def initialize() {
 	state.temp = 6500
-  	runEvery1Minute(hourUpdate)
+  	runEvery1Hour(hourUpdate)
 }
 
 def hourUpdate() {
