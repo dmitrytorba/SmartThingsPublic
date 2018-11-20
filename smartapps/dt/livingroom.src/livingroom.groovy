@@ -48,11 +48,10 @@ def init() {
   subscribe(motion, "motion", onMotion)
   subscribe(killSwitch, "switch", onKill)
   subscribe(sleepSwitch, "switch", onSleep)
-
-  runEvery1Minute(minuteUpdate)
+  subscribe(controlBulb, "colorTemperature", onColor)
 }
 
-def minuteUpdate() {
+def onColor() {
   bulbs.setLevel(getLevel())
   tBulbs.setColorTemperature(getTemp())
 }   
