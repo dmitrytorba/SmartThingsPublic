@@ -13,6 +13,9 @@ preferences {
   section("Motion Sensor"){
     input "motion", "capability.motionSensor", required: false
   }
+  section("Neighbor Motion Sensor"){
+    input "neighborMotion", "capability.motionSensor", required: false
+  }
   section("Turn off delay"){
     input "delay", "number", title: "Minutes?"
   }
@@ -46,17 +49,8 @@ def updated() {
 
 def init() {
   subscribe(motion, "motion", onMotion)
+  subscribe(neighborMotion, "motion", onNeighborMotion)
   subscribe(killSwitch, "switch", onKill)
-  subscribe(sleepSwitch, "switch", onSleep)
-  runEvery1Minute(minuteUpdate)
-}
-
-def minuteUpdate() {
-  bulbs.setLevel(getLevel())
-  tBulbs.setColorTemperature(getTemp())
-}   
-
-def onSleep(evt) {
 }
 
 def onKill(evt) {
@@ -76,18 +70,33 @@ def getTemp() {
   return controlBulb.currentValue("colorTemperature")
 }
 
+def onNeighborMotion(evt) {
+  def automationOn = killSwitch.currentValue("switch") != "on"
+  log.trace "room onNeighborMotion() ${evt.value} ${automationOn}" 
+  if (automationOn) {
+    if (evt.value == "active") { 
+		lightsOn()
+	} 
+  	runIn(60, check)
+  }
+}
+
+def lightsOn() {
+	log.debug("motion, light on")
+	def level = getLevel()
+	bulbs.setLevel(level)
+	def temp = getTemp()
+	tBulbs.setColorTemperature(temp)
+}
+
 def onMotion(evt) {
   def automationOn = killSwitch.currentValue("switch") != "on"
   log.trace "room onMotion() ${evt.value} ${automationOn}" 
   if (automationOn) {
     if (evt.value == "active") { 
-      log.debug("motion, light on")
-      def level = getLevel()
-      bulbs.setLevel(level)
-      def temp = getTemp()
-      tBulbs.setColorTemperature(temp)
-    } else if (evt.value == "inactive") {
-      check()
+		lightsOn()
+	} else if (evt.value == "inactive") {
+		check()
     }
   }
 }
