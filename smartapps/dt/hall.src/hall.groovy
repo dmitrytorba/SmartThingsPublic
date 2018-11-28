@@ -1,57 +1,26 @@
 definition(
-name: "hall",
-namespace: "dt",
-author: "dt",
-description: "smart habitat",
-category: "Convenience",
-iconUrl: "https://s3.amazonaws.com/smartapp-icons/Meta/temp_thermo-switch.png",
-iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Meta/temp_thermo-switch@2x.png"
-)
+    name: "bathroom",
+    namespace: "dt",
+    author: "dt",
+    description: "smart habitat",
+    category: "My Apps",
+    iconUrl: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience.png",
+    iconX2Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png",
+    iconX3Url: "https://s3.amazonaws.com/smartapp-icons/Convenience/Cat-Convenience@2x.png")
+
 
 preferences {
-  section("Bathroom Door"){
-    input "bathDoor", "capability.contactSensor"
+  section("Motion Sensor"){
+    input "motion", "capability.motionSensor", required: false
   }
-  section("Hallway East"){
-    input "eastHall", "capability.motionSensor"
+  section("Turn off delay"){
+    input "delay", "number", title: "Minutes?"
   }
-  section("Hallway West"){
-    input "westHall", "capability.motionSensor"
-  }
-  section("Bathroom Motion"){
-    input "bathroomMotion", "capability.motionSensor"
-  }
-  section("Hall off delay"){
-    input "hallDelay", "number", title: "Minutes?"
-  }
-  section("Bathroom off delay"){
-    input "bathDelay", "number", title: "Minutes?"
-  }
-  section("Bright lights between what times?") {
-    input "fromTime", "time", title: "From", required: true
-    input "toTime", "time", title: "To", required: true
-  }
-  section("Alarm") {
-    input "alarmFrom", "time", title: "From", required: true
-    input "alarmTo", "time", title: "To", required: true
-  }
-  section("Motion Controlled Bulbs"){
+  section("Dimmable Bulbs"){
     input "bulbs", "capability.switchLevel", multiple: true
   }
-  section("Turn off when sleeping"){
-    input "annoyingBulbs", "capability.switchLevel", multiple: true
-  }
-  section("Bulb Temperature"){
-    input "bulbTemp", "capability.colorTemperature", multiple: true
-  }
-  section("Bathroom Bulbs"){
-    input "bathroomBulbs", "capability.switchLevel", multiple: true
-  }
-  section("Bathroom Switch"){
-    input "bathroomSwitch", "capability.switch"
-  }
-  section("Hallway Bulb (rgb)"){
-    input "hallBulbColor", "capability.colorControl"
+  section("Temperature Bulbs"){
+    input "tBulbs", "capability.colorTemperature", multiple: true
   }
   section("Kill Switch"){
     input "killSwitch", "capability.switch"
@@ -61,14 +30,25 @@ preferences {
   }
   section("Control Bulb"){
     input "controlBulb", "capability.colorTemperature"
+  }      
+  section("Bathroom Door"){
+    input "bathDoor", "capability.contactSensor"
+  }
+  section("Alarm") {
+    input "alarmFrom", "time", title: "From", required: true
+    input "alarmTo", "time", title: "To", required: true
+  }
+  section("Turn off when sleeping"){
+    input "annoyingBulbs", "capability.switchLevel", multiple: true
+  }
+  section("RGB Bulb")
+    input "rgbBulbs", "capability.colorControl"
   }
 }
 
 def init() {
   subscribe(bathDoor, "contact", onMotion)
-  subscribe(eastHall, "motion", onMotion)
-  subscribe(westHall, "motion", onMotion)
-  subscribe(bathroomMotion, "motion", onMotion)
+  subscribe(motion, "motion", onMotion)
   subscribe(sleepSwitch, "switch", onSleep)
   subscribe(killSwitch, "switch", onKill)
 }
@@ -127,21 +107,14 @@ def setColors() {
   def sleepTime = sleepSwitch.currentValue("switch") == "on"
   if (isAlarm()) {
     log.debug "alarm!"
-    hallBulbColor.setHue(240)
-    hallBulbColor.setSaturation(100)
-    bathroomColor.setHue(240)
-    bathroomColor.setSaturation(100)
+    rgbBulbs.setHue(240)
+    rgbBulbs.setSaturation(100)
   } else if (bathroomMotion.currentState("motion").value == "active" && bathContact == "closed") {
     log.debug "bathroom occupied!"
-    hallBulbColor.setHue(97)
-    hallBulbColor.setSaturation(99)
+    rgbBulbs.setHue(97)
+    rgbBulbs.setSaturation(99)
   } else if(!sleepTime) {
-    def currentTemp = bulbTemp.currentValue("colorTemperature")
-    log.debug "Current temp: $currentTemp"
-    def temp = getTemp()
-    if (currentTemp[0] != temp) {
-      bulbTemp.setColorTemperature(temp)
-    }
+    tBulbs.setColorTemperature(getTemp())
   }
 }
 
@@ -154,34 +127,26 @@ def onMotion(evt) {
         evt.value == "active" ||
         evt.value == "open" ) {
       def level = getLevel()
-      if (sleepTime) {
-        bathroomBulbs.setLevel(10)
-      } else {
+      if (!sleepTime) {
         setColors()
         bulbs.setLevel(level)
       }
     }
-    check()
+    runIn(60, check)
   }
 }
 
 def check() {
-  log.debug "check()"
-  def east = eastHall.currentState("motion")
-  def west = westHall.currentState("motion")
-  def bath = bathroomMotion.currentState("motion")
-  if (east.value == "inactive" && west.value == "inactive") {
-    if (bath.value == "inactive") {
-      def elapsedEast = now() - east.rawDateCreated.time
-      def elapsedWest = now() - west.rawDateCreated.time
-      def elapsedBath = now() - bath.rawDateCreated.time
-      def hallThreshold = 1000 * hallDelay * 60 - 1000
-      def bathThreshold = 1000 * bathDelay * 60 - 1000
-      if (elapsedEast >= hallThreshold && elapsedWest >= hallThreshold && elapsedBath >= bathThreshold) {
-        bulbs.off()
-        return
-      }
-    } 
-  } 
+  log.trace "playroom check()"
+  def motionData = motion.currentState("motion")
+  if (motionData.value == "inactive") {
+    def elapsed = now() - motionData.rawDateCreated.time
+    def threshold = 1000 * delay * 60 - 1000
+    if (elapsed >= threshold) {
+      log.trace "hall elapsed: " + elapsed
+      bulbs.off()
+      return
+    }
+  }
   runIn(60, check)
 }
