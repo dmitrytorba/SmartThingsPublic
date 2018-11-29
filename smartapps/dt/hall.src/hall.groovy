@@ -1,5 +1,5 @@
 definition(
-    name: "bathroom",
+    name: "hall",
     namespace: "dt",
     author: "dt",
     description: "smart habitat",
@@ -10,8 +10,11 @@ definition(
 
 
 preferences {
-  section("Motion Sensor"){
+  section("Hall Motion"){
     input "motion", "capability.motionSensor", required: false
+  }
+  section("Bathroom Motion"){
+    input "bathroomMotion", "capability.motionSensor", required: false
   }
   section("Turn off delay"){
     input "delay", "number", title: "Minutes?"
@@ -41,7 +44,7 @@ preferences {
   section("Turn off when sleeping"){
     input "annoyingBulbs", "capability.switchLevel", multiple: true
   }
-  section("RGB Bulb")
+  section("RGB Bulb") {
     input "rgbBulbs", "capability.colorControl"
   }
 }
