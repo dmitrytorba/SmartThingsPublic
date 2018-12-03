@@ -56,11 +56,20 @@ def init() {
 
 def onOverrideLevel(evt) {
   log.debug "onOverrideLevel " + evt.value
-  killSwitch.on()
+  if (state.pending) {
+    state.pending = false
+  } else {
+    killSwitch.on()
+  }
+
 }
 
 def onOverrideTemp(evt) {
-  killSwitch.on()
+  if (state.pending) {
+    state.pending = false
+  } else {
+    killSwitch.on()
+  }
 }
 
 def onControlLevel(evt) {
@@ -100,11 +109,13 @@ def lightsOn() {
   def currentLevel = bulbs.currentValue("level")[0]
   def level = getLevel()
   if (currentLevel != level) {
+    state.pending = true
     bulbs.setLevel(level)
   }
   def currentTemp = bulbs.currentValue("colorTemperature")[0]
   def temp = getTemp()
   if (currentTemp != temp) {
+    state.pending = true
     tBulbs.setColorTemperature(temp)
   }
 }
