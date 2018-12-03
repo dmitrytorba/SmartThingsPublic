@@ -46,7 +46,7 @@ def updated() {
 
 def init() {
   subscribe(motion, "motion", onMotion)
-  subscribe(killSwitch, "switch", onKill)
+  //subscribe(killSwitch, "switch", onKill)
   subscribe(sleepSwitch, "switch", onSleep)
   subscribe(controlBulb, "colorTemperature", onControlTemp)
   subscribe(controlBulb, "level", onControlLevel)
@@ -87,6 +87,7 @@ def onKill(evt) {
     bulbs.off()
   }
 }
+
 def getLevel() {
   return controlBulb.currentValue("level")
 }
