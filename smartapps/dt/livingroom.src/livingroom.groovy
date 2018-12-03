@@ -48,11 +48,26 @@ def init() {
   subscribe(motion, "motion", onMotion)
   subscribe(killSwitch, "switch", onKill)
   subscribe(sleepSwitch, "switch", onSleep)
-  subscribe(controlBulb, "colorTemperature", onColor)
+  subscribe(controlBulb, "colorTemperature", onControlTemp)
+  subscribe(controlBulb, "level", onControlLevel)
+  subscribe(bulbs, "colorTemperature", onOverrideTemp)
+  subscribe(bulbs, "level", onOverrideLevel)
 }
 
-def onColor(evt) {
+def onOverrideLevel(evt) {
+  log.debug "onOverrideLevel " + evt.value
+  killSwitch.on()
+}
+
+def onOverrideTemp(evt) {
+  killSwitch.on()
+}
+
+def onControlLevel(evt) {
   bulbs.setLevel(getLevel())
+}
+
+def onControlTemp(evt) {
   tBulbs.setColorTemperature(getTemp())
 }   
 
@@ -80,6 +95,19 @@ def getTemp() {
   return controlBulb.currentValue("colorTemperature")
 }
 
+def lightsOn() {
+  def currentLevel = bulbs.currentValue("level")[0]
+  def level = getLevel()
+  if (currentLevel != level) {
+    bulbs.setLevel(level)
+  }
+  def currentTemp = bulbs.currentValue("colorTemperature")[0]
+  def temp = getTemp()
+  if (currentTemp != temp) {
+    tBulbs.setColorTemperature(temp)
+  }
+}
+
 def onMotion(evt) {
   def automationOn = killSwitch.currentValue("switch") != "on"
   def sleepMode = sleepSwitch.currentValue("switch") == "on"
@@ -87,10 +115,7 @@ def onMotion(evt) {
   if (automationOn && !sleepMode) {
     if (evt.value == "active") { 
       log.debug("motion, light on")
-      def level = getLevel()
-      bulbs.setLevel(level)
-      def temp = getTemp()
-      tBulbs.setColorTemperature(temp)
+      lightsOn()    
     } else if (evt.value == "inactive") {
       check()
     }
