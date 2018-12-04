@@ -110,7 +110,7 @@ def lightsOn() {
   def level = getLevel()
   log.debug "current: " + currentLevel
   log.debug "new: " + level
-  if (currentLevel != level) {
+  if (Math.abs(currentLevel - level) < 5) {
     state.pending = true
     bulbs.setLevel(level)
   }
@@ -118,7 +118,7 @@ def lightsOn() {
   def temp = getTemp()
   log.debug "current: " + currentTemp
   log.debug "new: " + temp 
-  if (currentTemp != temp) {
+  if (Math.abs(currentTemp - temp) < 50) {
     state.pending = true
     tBulbs.setColorTemperature(temp)
   }
