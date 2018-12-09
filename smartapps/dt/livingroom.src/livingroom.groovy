@@ -70,10 +70,12 @@ def onOverrideTemp(evt) {
 }
 
 def onControlLevel(evt) {
+	state.pending = true
   bulbs.setLevel(getLevel())
 }
 
 def onControlTemp(evt) {
+	state.pending = true
   tBulbs.setColorTemperature(getTemp())
 }   
 
