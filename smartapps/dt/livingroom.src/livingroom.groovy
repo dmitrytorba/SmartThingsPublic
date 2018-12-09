@@ -46,7 +46,6 @@ def updated() {
 
 def init() {
   subscribe(motion, "motion", onMotion)
-  //subscribe(killSwitch, "switch", onKill)
   subscribe(sleepSwitch, "switch", onSleep)
   subscribe(controlBulb, "colorTemperature", onControlTemp)
   subscribe(controlBulb, "level", onControlLevel)
@@ -55,13 +54,11 @@ def init() {
 }
 
 def onOverrideLevel(evt) {
-  log.debug "onOverrideLevel " + evt.value
   if (state.pending) {
     state.pending = false
   } else {
     killSwitch.on()
   }
-
 }
 
 def onOverrideTemp(evt) {

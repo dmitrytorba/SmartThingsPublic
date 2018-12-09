@@ -37,10 +37,40 @@ preferences {
 
 def init() {
   subscribe(playroomMotion, "motion", onMotion)
-  subscribe(killSwitch, "switch", onKill)
+  //subscribe(killSwitch, "switch", onKill)
   subscribe(sleepSwitch, "switch", onSleep)
   subscribe(sleepButton, "button", onSleepButton)
+  subscribe(controlBulb, "colorTemperature", onControlTemp)
+  subscribe(controlBulb, "level", onControlLevel)
+  subscribe(bulbs, "colorTemperature", onOverrideTemp)
+  subscribe(bulbs, "level", onOverrideLevel)
 }
+
+def onOverrideLevel(evt) {
+  log.debug "onOverrideLevel " + evt.value
+  if (state.pending) {
+    state.pending = false
+  } else {
+    killSwitch.on()
+  }
+
+}
+
+def onOverrideTemp(evt) {
+  if (state.pending) {
+    state.pending = false
+  } else {
+    killSwitch.on()
+  }
+}
+
+def onControlLevel(evt) {
+  bulbs.setLevel(getLevel())
+}
+
+def onControlTemp(evt) {
+  bulbTemp.setColorTemperature(getTemp())
+}   
 
 def onSleepButton(evt) {
   log.trace "onSleepButton"
@@ -94,6 +124,26 @@ def getTemp() {
   return controlBulb.currentValue("colorTemperature")
 }
 
+
+def lightsOn() {
+  def currentLevel = bulbs.currentValue("level")[0]
+  def level = getLevel()
+  log.debug "current: " + currentLevel
+  log.debug "new: " + level
+  if (Math.abs(currentLevel - level) < 5) {
+    state.pending = true
+    bulbs.setLevel(level)
+  }
+  def currentTemp = bulbs.currentValue("colorTemperature")[0]
+  def temp = getTemp()
+  log.debug "current: " + currentTemp
+  log.debug "new: " + temp 
+  if (Math.abs(currentTemp - temp) < 50) {
+    state.pending = true
+    bulbTemp.setColorTemperature(temp)
+  }
+}
+
 def onMotion(evt) {
   def automationOn = killSwitch.currentValue("switch") != "on"
   def sleepMode = sleepSwitch.currentValue("switch") == "on"
@@ -101,10 +151,7 @@ def onMotion(evt) {
   if (automationOn && !sleepMode) {
     if (evt.value == "active") { 
       log.debug("playroom motion, light on")
-      def level = getLevel()
-      bulbs.setLevel(level)
-      def temp = getTemp()
-      bulbTemp.setColorTemperature(temp)
+      lightsOn()    
     } else if (evt.value == "inactive") {
       check()
     }
