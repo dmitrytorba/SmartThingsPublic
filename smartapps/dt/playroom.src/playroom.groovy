@@ -65,10 +65,12 @@ def onOverrideTemp(evt) {
 }
 
 def onControlLevel(evt) {
+	state.pending = true
   bulbs.setLevel(getLevel())
 }
 
 def onControlTemp(evt) {
+	state.pending = true
   bulbTemp.setColorTemperature(getTemp())
 }   
 
@@ -166,6 +168,7 @@ def check() {
     def threshold = 1000 * delay * 60 - 1000
     if (elapsed >= threshold) {
       log.trace "playroom elapsed: " + elapsed
+      state.pending = true
       bulbs.off()
       return
     }

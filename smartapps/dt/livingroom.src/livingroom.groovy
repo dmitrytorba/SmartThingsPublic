@@ -145,6 +145,7 @@ def check() {
     def threshold = 1000 * delay * 60 - 1000
     if (elapsed >= threshold) {
       log.trace "room elapsed: " + elapsed
+      state.pending = true
       bulbs.off()
       return
     }
