@@ -53,10 +53,14 @@ def init() {
   subscribe(bulbs, "level", onOverrideLevel)
 }
 
+def pendingOff() {
+    state.pending = false
+}
+
 def onOverrideLevel(evt) {
   log.debug "onOverrideLevel: ${evt.value} ${evt.displayName} ${evt.isStateChange()}" 
   if (state.pending) {
-    state.pending = false
+    runIn(1, pendingOff)
   } else {
     killSwitch.on()
   }
@@ -65,7 +69,7 @@ def onOverrideLevel(evt) {
 def onOverrideTemp(evt) {
 	log.debug "onOverrideTemp: ${evt.value} ${evt.displayName} ${evt.isStateChange()}" 
   if (state.pending) {
-    state.pending = false
+    runIn(1, pendingOff)
   } else {
     killSwitch.on()
   }
