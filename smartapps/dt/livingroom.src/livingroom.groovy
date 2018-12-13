@@ -11,7 +11,7 @@ definition(
 
 preferences {
   section("Motion Sensor"){
-    input "motion", "capability.motionSensor", required: false
+    input "motion", "capability.motionSensor", required: false, multiple: true
   }
   section("Turn off delay"){
     input "delay", "number", title: "Minutes?"
