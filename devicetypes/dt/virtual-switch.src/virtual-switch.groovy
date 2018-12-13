@@ -27,13 +27,17 @@ def parse(String description) {
 }
 
 def on() {
-  log.trace "virtual on"
-  sendEvent(name: "switch", value: "on")
+  if (device.currentValue("switch") == "off") {
+  	log.trace "virtual on"
+  	sendEvent(name: "switch", value: "on")	
+  }
 }
 
 def off() {
-  log.trace "virtual off"
-  sendEvent(name: "switch", value: "off")
+  if (device.currentValue("switch") == "on") {
+  	log.trace "virtual off"
+  	sendEvent(name: "switch", value: "off")
+  }
 }
 
 def toggle() {
