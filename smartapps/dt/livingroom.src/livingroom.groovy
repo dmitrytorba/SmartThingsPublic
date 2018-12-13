@@ -54,7 +54,7 @@ def init() {
 }
 
 def onOverrideLevel(evt) {
-	 log.debug "onOverrideLevel: " + evt.value
+  log.debug "onOverrideLevel: ${evt.value} ${evt.displayName} ${evt.isStateChange()}" 
   if (state.pending) {
     state.pending = false
   } else {
@@ -63,7 +63,7 @@ def onOverrideLevel(evt) {
 }
 
 def onOverrideTemp(evt) {
-	log.debug "onOverrideTemp: "  + evt.value
+	log.debug "onOverrideTemp: ${evt.value} ${evt.displayName} ${evt.isStateChange()}" 
   if (state.pending) {
     state.pending = false
   } else {
