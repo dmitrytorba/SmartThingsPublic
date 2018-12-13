@@ -59,7 +59,7 @@ def init() {
 def onKill(evt) {
   if (evt.value == "on") {
     bulbs.on()
-    bulbTemp.setColorTemperature(6500)
+    tBulbs.setColorTemperature(6500)
   } else if (evt.value == "off") {
     bulbs.off()
   }
