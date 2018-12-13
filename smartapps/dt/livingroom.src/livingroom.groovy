@@ -54,6 +54,7 @@ def init() {
 }
 
 def pendingOff() {
+  log.debug "pending off"
     state.pending = false
 }
 
@@ -63,6 +64,7 @@ def onOverrideLevel(evt) {
   if (state.pending) {
     runIn(1, pendingOff)
   } else {
+    log.debug "kill on"
     killSwitch.on()
   }
 }
