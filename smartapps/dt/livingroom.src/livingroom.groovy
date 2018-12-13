@@ -58,7 +58,8 @@ def pendingOff() {
 }
 
 def onOverrideLevel(evt) {
-  log.debug "onOverrideLevel: ${evt.value} ${evt.displayName} ${evt.isStateChange()}" 
+  def sw = bulbs.currentValue("switch")
+  log.debug "onOverrideLevel: ${evt.value} ${evt.displayName} ${evt.isStateChange()} ${sw}" 
   if (state.pending) {
     runIn(1, pendingOff)
   } else {
@@ -67,7 +68,8 @@ def onOverrideLevel(evt) {
 }
 
 def onOverrideTemp(evt) {
-	log.debug "onOverrideTemp: ${evt.value} ${evt.displayName} ${evt.isStateChange()}" 
+  def sw = bulbs.currentValue("switch")
+	log.debug "onOverrideTemp: ${evt.value} ${evt.displayName} ${evt.isStateChange()} ${sw}" 
   if (state.pending) {
     runIn(1, pendingOff)
   } else {
