@@ -149,7 +149,7 @@ def onMotion(evt) {
 
 def check() {
   log.trace "room check()"
-  def motionData = motion.currentState("motion")
+  def motionData = motion.currentState("motion")[0]
   log.trace motionData.value
   if (motionData.value == "inactive") {
     def elapsed = now() - motionData.rawDateCreated.time
