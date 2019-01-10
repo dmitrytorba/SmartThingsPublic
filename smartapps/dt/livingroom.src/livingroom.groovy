@@ -150,7 +150,7 @@ def onMotion(evt) {
 def check() {
   log.trace "room check()"
   def motionData = motion.currentState("motion")
-  log.trace motionData.value
+  log.trace motionData
   if (motionData.value == "inactive") {
     def elapsed = now() - motionData.rawDateCreated.time
     def threshold = 1000 * delay * 60 - 1000
