@@ -105,14 +105,24 @@ def isAlarm(evt) {
   return false
 }
 
+def isOccupied() {
+  def bathContact = bathDoor.currentState("contact")
+  def motionData = bathroomMotion.currentState("motion")
+  def occupied = motionData.value == "active" && bathContact.value == "closed"
+  if (occupied) {
+    def elapsed = now() - motionData.rawDateCreated.time
+    log.debug "occupied elapsed: $elapsed"  
+  }
+  return occupied
+}
+
 def setColors() {
-  def bathContact = bathDoor.currentState("contact").value
   def sleepTime = sleepSwitch.currentValue("switch") == "on"
   if (isAlarm()) {
     log.debug "alarm!"
     rgbBulbs.setHue(240)
     rgbBulbs.setSaturation(100)
-  } else if (bathroomMotion.currentState("motion").value == "active" && bathContact == "closed") {
+  } else if (isOccupied()) {
     log.debug "bathroom occupied!"
     rgbBulbs.setHue(97)
     rgbBulbs.setSaturation(99)
