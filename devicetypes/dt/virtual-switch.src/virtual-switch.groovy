@@ -38,6 +38,7 @@ def off() {
   	log.trace "virtual off"
   	sendEvent(name: "switch", value: "off")
   }
+  state.val = "off"
 }
 
 def toggle() {

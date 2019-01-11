@@ -34,11 +34,23 @@ def updated() {
 
 def initialize() {
 	state.temp = 6500
+	state.level = 100 
   	runEvery1Hour(hourUpdate)
 }
 
 def hourUpdate() {
-	def current = tBulbs.currentValue("colorTemperature")
+	def temp = tBulbs.currentValue("colorTemperature")
+	def level = tBulbs.currentValue("level")
+	log.debug "color hourUpdate() " + state.temp + " " + temp 
+	if (temp != state.temp) {
+		log.debug "manual color override: " + temp 
+		state.temp = temp 
+	}		
+	if (level != state.level) {
+		log.debug "manual color override: " + temp 
+		state.level = level 
+	}	
+	current = tBulbs.currentValue("level")
 	log.debug "color hourUpdate() " + state.temp + " " + current
 	if (current != state.temp) {
 		log.debug "manual color override: " + current

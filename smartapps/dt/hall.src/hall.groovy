@@ -111,7 +111,8 @@ def isOccupied() {
   def occupied = motionData.value == "active" && bathContact.value == "closed"
   if (occupied) {
     def elapsed = now() - motionData.rawDateCreated.time
-    log.debug "occupied elapsed: $elapsed"  
+    log.debug "occupied elapsed: $elapsed"
+    return elapsed < 35000  
   }
   return occupied
 }
